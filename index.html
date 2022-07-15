@@ -62,12 +62,16 @@
 
                     if (document.getElementById("fundI").value != '---' && document.getElementById("divisorI").value != '---') {
                         calculate();
+                        var lotInd = document.getElementById('lotInd');
                         var indicators = document.getElementsByClassName('indicator');
+                        lotInd.classList.add('lotActive');
                         for(var i = 0 ; i < indicators.length ; i ++){
                             indicators[i].classList.add('resultActive');
                         }
                     }
                     else {
+                        var lotInd = document.getElementById('lotInd');
+                        lotInd.classList.remove('lotActive');
                         var indicators = document.getElementsByClassName('indicator');
                         for(var i = 0 ; i < indicators.length ; i ++){
                             indicators[i].classList.remove('resultActive');
@@ -137,11 +141,6 @@
                 font-size: 8px;
             }
         }
-
-
-     
-
-
         
         .calcTitle{
             background-color: rgb(17, 17, 17);
@@ -162,7 +161,10 @@
             background-color: rgb(153, 131, 103);
         }
         .resultActive{
-            background-color: rgb(177, 169, 143);
+            background-color: rgb(168, 159, 128);
+        }
+        .lotActive{
+            background-color: rgb(109, 177, 45);
         }
 
 
@@ -220,7 +222,7 @@
         <div class="rows divisor" id="divisor"> TYPE YOUR DIVISOR -> 
             <input type="text" class="divisorI" id="divisorI" value="---">
         </div>
-        <div class="rows lot indicator" > LOT : 
+        <div class="rows lot indicator" id="lotInd"> LOT : 
             <div class="results" id="lot">0.00</div> 
         </div>   
         <div class="rows indicator" > 30% COMMISSION FEE :
