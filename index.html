@@ -4,9 +4,218 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wow Calculator</title>
+    <script>
+        window.onload = () => {
+            function updateValue (id, value){
+                document.getElementById(id).innerHTML = value;
+            }
+            function floor(decimal){
+                return Math.floor(decimal*100) / 100 ;
+            }
+
+            function fixed(number){
+                return parseFloat(number).toFixed(2);
+            }
+
+            function calculate(){
+                var funds  = document.getElementById("fundI").value;
+                var divisor = document.getElementById("divisorI").value;
+                var lotsize = floor(funds/divisor);
+                //Update
+                //Lot
+                updateValue('lot' , fixed(lotsize))
+                //commission
+                updateValue('commission' , fixed(lotsize * 30));
+                //targets
+                updateValue('target1' , fixed(lotsize * 60));
+                updateValue('target2' , fixed(lotsize * 70) );
+                updateValue('target3' , fixed(lotsize * 80));
+                updateValue('target3d5' , fixed(lotsize * 85));
+                updateValue('target4' , fixed(lotsize * 90));
+                updateValue('target5' , fixed(lotsize * 100));
+
+
+
+
+
+
+            }
+            var inputs = document.getElementsByTagName("input");
+
+            for(var i = 0; i < inputs.length; i++){
+                inputs[i].onfocus = function(){
+                    this.value = '';
+                    this.type = 'number';
+                    this.classList.add('inputFocus');
+                    this.parentElement.classList.add('inputFocus');
+                }
+                inputs[i].onblur = function(){
+                    if (this.value =='') {
+                        this.type = 'text';
+                        this.value = '---';
+                    }else{
+                        if(this.id == 'fundI') this.value = parseFloat(this.value).toFixed(2);
+                    }
+                    this.parentElement.classList.remove('inputFocus');
+                    this.classList.remove('inputFocus');
+
+                    if (document.getElementById("fundI").value != '---' && document.getElementById("divisorI").value != '---') {
+                        calculate();
+                        var indicators = document.getElementsByClassName('indicator');
+                        for(var i = 0 ; i < indicators.length ; i ++){
+                            indicators[i].classList.add('resultActive');
+                        }
+                    }
+                    else {
+                        var indicators = document.getElementsByClassName('indicator');
+                        for(var i = 0 ; i < indicators.length ; i ++){
+                            indicators[i].classList.remove('resultActive');
+                        }
+                        var results = document.getElementsByClassName('results');
+                        for (var i = 0 ; i < results.length; i++){
+                            results[i].innerHTML = "0.00";
+                        }
+                    }
+
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100%;
+            min-width: 100%;
+            background-color: rgb(39, 34, 34);
+        }
+        .calculator {
+            
+            display: block;
+            position: absolute;
+            min-height: 100%;
+            min-width: 100%;
+        }
+
+        .rows {
+            background-color: rgb(122, 114, 99);
+            display: flex;
+            height: 100%;
+            width: 100%;
+            max-width: 800px;
+            max-height: 60px;       
+            margin-top: 3px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 2px;
+            line-height: 60px;
+            font-weight:500;
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-left: 10px;
+            transition: background-color 0.5s;
+        }
+        .calcTitle{
+            background-color: rgb(17, 17, 17);
+            color: white;
+            justify-content: center;
+            line-height: 60px;
+            font-weight:600;
+            font-size: 25px;
+        }
+        .targetheader{
+            font-weight:400;
+            background-color: rgb(85, 82, 77);
+        }
+        .fund{
+            background-color: rgb(173, 150, 120) ;
+        }
+        .divisor{
+            background-color: rgb(153, 131, 103);
+        }
+        .resultActive{
+            background-color: rgb(177, 169, 143);
+        }
+
+
+        input{
+            background-color: rgb(173, 150, 120) ;
+            min-height: 100%;
+            max-width: 100px;
+            position: relative;
+            text-align: center;
+            font-weight:700;
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            border: none;
+            margin-left: auto;
+            transition: background-color 0.5s;
+        }
+        input:focus{
+            outline: none;
+        }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        
+        .divisorI{
+            background-color: rgb(153, 131, 103);
+        }
+
+        .results{
+            min-height: 100%;
+            max-width: 100px;
+            position: relative;
+            text-align: center;
+            font-weight:700;
+            font-size: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-left: auto;
+            right: 30px;
+        }
+
+        .inputFocus{
+            background-color: rgb(223, 206, 183) ;
+        }
+
+
+    </style>
 </head>
 <body>
-    Hello World
+    <div id="calculator">
+        <div class="rows calcTitle" id = 'calcTitle'> FOREX LOT SIZING </div>
+        <div class="rows fund" id="fund"> TYPE YOUR CURRENT FUND -> 
+            <input type="text" class="fundI" id="fundI"value="---">
+        </div>
+        <div class="rows divisor" id="divisor"> TYPE YOUR DIVISOR -> 
+            <input type="text" class="divisorI" id="divisorI" value="---">
+        </div>
+        <div class="rows lot indicator" > LOT : 
+            <div class="results" id="lot">0.00</div> 
+        </div>   
+        <div class="rows indicator" > 30% COMMISSION FEE :
+            <div class="results" id="commission">0.00</div>
+        </div>
+
+        <div class="rows targetheader"id = 'targetheader'> TARGET </div>
+        
+        <div class="rows indicator"> TARGET 1 @ 60:  
+            <div class="results" id="target1">0.00</div> </div>
+        <div class="rows indicator"> TARGET 2 @ 70:   
+            <div class="results" id="target2">0.00</div>
+        </div>
+        <div class="rows indicator"> TARGET 3 @ 80:  
+            <div class="results" id="target3" >0.00</div> </div>
+        <div class="rows indicator"> TARGET 3.5 @ 85:  
+            <div class="results" id="target3d5">0.00</div> </div>
+        <div class="rows indicator"> TARGET 4 @ 90:   
+            <div class="results" id="target4">0.00</div>
+        </div>
+        <div class="rows indicator"> TARGET 5 @ 100:  
+            <div class="results" id="target5">0.00</div>
+        </div>
+    </div>
 </body>
 </html>
