@@ -26,7 +26,7 @@
                 //Lot
                 updateValue('lot' , fixed(lotsize))
                 //commission
-                updateValue('commission' , fixed(lotsize * 30));
+                updateValue('commission' , fixed(-lotsize * 30));
                 //targets
                 updateValue('target1' , fixed(lotsize * 60));
                 updateValue('target2' , fixed(lotsize * 70) );
@@ -63,15 +63,19 @@
                     if (document.getElementById("fundI").value != '---' && document.getElementById("divisorI").value != '---') {
                         calculate();
                         var lotInd = document.getElementById('lotInd');
+                        var comnId = document.getElementById('comInd');
                         var indicators = document.getElementsByClassName('indicator');
                         lotInd.classList.add('lotActive');
+                        comInd.classList.add('comActive');
                         for(var i = 0 ; i < indicators.length ; i ++){
                             indicators[i].classList.add('resultActive');
                         }
                     }
                     else {
                         var lotInd = document.getElementById('lotInd');
+                        var comnId = document.getElementById('comInd');
                         lotInd.classList.remove('lotActive');
+                        comInd.classList.remove('comActive');
                         var indicators = document.getElementsByClassName('indicator');
                         for(var i = 0 ; i < indicators.length ; i ++){
                             indicators[i].classList.remove('resultActive');
@@ -166,7 +170,9 @@
         .lotActive{
             background-color: rgb(109, 177, 45);
         }
-
+        .comActive{
+            background-color: rgb(177, 45, 45);
+        }
 
         input{
             background-color: rgb(173, 150, 120) ;
@@ -225,7 +231,7 @@
         <div class="rows lot indicator" id="lotInd"> LOT : 
             <div class="results" id="lot">0.00</div> 
         </div>   
-        <div class="rows indicator" > 30% COMMISSION FEE :
+        <div class="rows indicator" id="comInd"> 30% COMMISSION FEE :
             <div class="results" id="commission">0.00</div>
         </div>
 
