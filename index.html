@@ -137,7 +137,10 @@
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
                                     if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
-                                    if(activeClass[k].classList.contains('classDone')) activeClass[k].classList.remove('classDone');
+                                    for(var j = 0; j < schedList[i].subjects.length;j++){
+                                        schedList[i].subjects[j].start.day = schedList[i].day;
+                                        schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
+                                    }
                                 }
                             }
                         }
@@ -150,7 +153,7 @@
                     }
                     else if(currentDate.getDay() == 6){
                         for(var m = 0 ; m  < schedList[i].subjects.length; m++){
-                            schedList[i].subjects[m].status.innerHTML = "Class Done";
+                            schedList[i].subjects[m].status.innerHTML = "Class Dismissed";
                         }
                     }
                     else if(currentDate.getDay() == 0){
@@ -158,14 +161,9 @@
                             schedList[i].subjects[j].start.day = schedList[i].day;
                             schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                         }
-                    }
-                    else{
-                        var backwards = i;
-                        while(backwards > 1 && backwards < i){
-                            backwards--;
-                            for(var m = 0 ; m  < schedList[backwards].subjects.length; m++){
-                                schedList[backwards].subjects[m].status.innerHTML = "Class Done";
-                            }
+                    }else if(schedList[i].day < currentDate.getDay()){
+                        for(var m = 0 ; m  < schedList[i].subjects.length; m++){
+                            schedList[i].subjects[m].status.innerHTML = "Class Dismissed";
                         }
                     }
                 }
