@@ -125,7 +125,7 @@
                     if(schedList[i].day == currentDate.getDay() ){
                         for(var j = 0; j < schedList[i].subjects.length; j++){
                             if(solveMinutes (schedList[i].subjects[j].end, currentTime) <= 0)  {
-                                schedList[i].subjects[j].status.innerHTML = 'Class Done';
+                                schedList[i].subjects[j].status.innerHTML = 'Class Dismissed';
                             }
                             else if( solveMinutes(currentTime , schedList[i].subjects[j].start) > 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Ongoing (' + classOngoing (schedList[i].subjects[j].end, currentTime)+')' ;
