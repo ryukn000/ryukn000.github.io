@@ -5,6 +5,138 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=0.7">
     <title>3B Schedule</title>
+    <script>
+        class Day{
+            constructor(day){
+                this.day = day;
+                this.subjects = [];
+            }
+        }
+
+        class Time{
+            constructor(hour, minute,second = 0, day = 0){
+                this.hour = hour;
+                this.minute = minute;
+                this.second = second;
+            }
+        }
+
+        class Subject{
+            constructor(element){
+                this.element = element;
+                this.start, this.end;
+                this.status;
+                for(var i = 0; i < element.children.length; i++){
+                    if(element.children[i].classList.contains('status')){
+                        this.status = element.children[i];
+                    }
+                }
+            }
+        }
+
+        function solveMinutes(time1, time2){
+            var hour = time1.hour - time2.hour;
+            return (time1.minute + (60 * hour) ) - time2.minute
+
+        }
+        function classOngoing(time1, time2){
+            var hour = time1.hour - time2.hour;
+            var minute  =  (time1.minute + (60 * hour) ) - time2.minute
+            var seconds = (time1.second + (60 * minute) ) - time2.second
+            
+            return Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor(seconds/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+        }
+        
+        function countdown(time1, time2){
+            var day = time1.day - time2.day;
+            var hour = time1.hour + (24 * day) - time2.hour;
+            var minute  =  (time1.minute + (60 * hour) ) - time2.minute
+            var seconds = (time1.second + (60 * minute) ) - time2.second
+            
+            return  Math.floor(((seconds/60)/60)/24) + Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor(seconds/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+        }
+    
+
+        window.onload = () => { 
+
+            var schedList = [];
+            var temp = document.getElementsByClassName('mon');
+            var monList = new Day(1);
+            for (var i = 0; i < temp.length; i++){
+                
+                monList.subjects.push(new Subject(temp[i]));
+            
+            }
+            monList.subjects[0].start = new Time(13,0); monList.subjects[0].end = new Time(16, 0);
+            monList.subjects[1].start = new Time(17,30); monList.subjects[1].end = new Time(19, 30);
+
+            temp = document.getElementsByClassName('tue');
+            var tueList = new Day(2);
+            for (var i = 0; i < temp.length; i++){
+                tueList.subjects.push(new Subject(temp[i]));
+            }
+
+            tueList.subjects[0].start = new Time(9,0); tueList.subjects[0].end = new Time(12, 0);
+            tueList.subjects[1].start = new Time(13,0); tueList.subjects[1].end = new Time(16, 0);
+            tueList.subjects[2].start = new Time(17,30); tueList.subjects[2].end = new Time(19, 0);
+            tueList.subjects[3].start = new Time(19,0); tueList.subjects[3].end = new Time(20, 30);
+
+            temp = document.getElementsByClassName('wed');
+            var wedList = new Day(3);
+            for (var i = 0; i < temp.length; i++){
+                wedList.subjects.push(new Subject(temp[i]));
+            }
+
+            wedList.subjects[0].start = new Time(8,0); wedList.subjects[0].end = new Time(10, 0);
+            wedList.subjects[1].start = new Time(13,0); wedList.subjects[1].end = new Time(16, 0);
+
+            temp = document.getElementsByClassName('thu');
+            var thuList = new Day(4);
+            for (var i = 0; i < temp.length; i++){
+                thuList.subjects.push(new Subject(temp[i]));
+            }
+
+            thuList.subjects[0].start = new Time(9,0); thuList.subjects[0].end = new Time(12, 0);
+            thuList.subjects[1].start = new Time(13,0); thuList.subjects[1].end = new Time(16, 0);
+            thuList.subjects[2].start = new Time(17,30); thuList.subjects[2].end = new Time(19, 0);
+            thuList.subjects[3].start = new Time(19,0); thuList.subjects[3].end = new Time(20, 30);
+
+            temp = document.getElementsByClassName('fri');
+            var friList = new Day(5);
+            for (var i = 0; i < temp.length; i++){
+                friList.subjects.push(new Subject(temp[i]));
+            }
+
+            friList.subjects[0].start = new Time(16,0); friList.subjects[0].end = new Time(18, 0);
+
+            schedList.push(monList);
+            schedList.push(tueList);
+            schedList.push(wedList);
+            schedList.push(thuList);
+            schedList.push(friList);
+
+            
+
+            var loop = setInterval( () =>{
+                var currentDate = new Date();
+                var activeClass, currentTime = new Time(currentDate.getHours(), currentDate.getMinutes() , currentDate.getSeconds(), currentDate.getDate());
+                for(var i = 0 ; i < schedList.length; i++){
+                    if(schedList[i].day == currentDate.getDay() ){
+                        for(var j = 0; j < schedList[i].subjects.length; j++){
+                            if( solveMinutes(currentTime , schedList[i].subjects[j].start) > 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
+                                schedList[i].subjects[j].status.innerHTML = 'Class Ongoing (' + classOngoing (schedList[i].subjects[j].end, currentTime)+')' ;
+                                activeClass = schedList[i].subjects[j].element.children;
+                                for(var k = 0 ; k < activeClass.length; k++){
+                                    activeClass[k].classList.add('classOngoing');
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            } , 1)
+        }
+    </script>
     <style>
         body{
             background-color: rgb(26, 25, 27);
@@ -77,6 +209,13 @@
             color: white;
         }
 
+        .classDone{
+            background-color: rgb(200, 202, 202);
+        }
+        .classOngoing{
+            background-color: greenyellow;
+        }
+
         @media screen and (max-width: 890px) {
            .items{
                 font-size: 10px;
@@ -116,7 +255,9 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" > MONDAY</div>
         </div>
-        <div class="row"> 
+
+
+        <div class="row mon"> 
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
 
@@ -126,7 +267,7 @@
             <div class="col items status">--</div>
 
         </div>
-        <div class="row"style="margin-bottom: 30px;"> 
+        <div class="row mon"style="margin-bottom: 30px;"> 
             <div class="col items code"> CS 115</div>
             <div class="col items subject"> Computer Architecture And Organization </div>
             <div class="col items time"> 05:30 PM-07:30 PM</div>
@@ -137,7 +278,7 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" > TUESDAY</div>
         </div>
-        <div class="row"> 
+        <div class="row tue"> 
             <div class="col items code"> CS 117 </div>
             <div class="col items subject"> Software Engineering 1 </div>
             <div class="col items time">09:00 AM-12:00 PM</div>
@@ -145,7 +286,7 @@
             <div class="col items faculty">MACEDA, L.</div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"> 
+        <div class="row tue"> 
             <div class="col items code"> CS Elec 1  </div>
             <div class="col items subject"> Cs Elec 1  </div>
             <div class="col items time">01:00 PM-04:00 PM </div>
@@ -153,7 +294,7 @@
             <div class="col items faculty">SATUITO, A. </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"> 
+        <div class="row tue"> 
             <div class="col items code"> CS 116   </div>
             <div class="col items subject">  Automata Theory And Formal Languages </div>
             <div class="col items time">05:30 PM-07:00 PM  </div>
@@ -161,7 +302,7 @@
             <div class="col items faculty">MENDONES, R. </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"style="margin-bottom: 30px;"> 
+        <div class="row tue"style="margin-bottom: 30px;"> 
             <div class="col items code"> GEC 16 </div>
             <div class="col items subject">  Art Appreciation  </div>
             <div class="col items time">07:00 PM-08:30 PM  </div>
@@ -172,7 +313,7 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" > WEDNESDAY</div>
         </div>
-        <div class="row"> 
+        <div class="row wed"> 
             <div class="col items code"> CS 117 </div>
             <div class="col items subject"> Software Engineering 1 </div>
             <div class="col items time">08:00 AM-10:00 AM</div>
@@ -180,7 +321,7 @@
             <div class="col items faculty">MACEDA, L.</div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"style="margin-bottom: 30px;"> 
+        <div class="row wed"style="margin-bottom: 30px;"> 
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
             <div class="col items time"> 01:00 PM-04:00 PM</div>
@@ -192,7 +333,7 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" > THURSDAY</div>
         </div>
-        <div class="row"> 
+        <div class="row thu"> 
             <div class="col items code"> CS 117 </div>
             <div class="col items subject"> Software Engineering 1 </div>
             <div class="col items time">09:00 AM-12:00 PM</div>
@@ -200,7 +341,7 @@
             <div class="col items faculty">MACEDA, L.</div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"> 
+        <div class="row thu"> 
             <div class="col items code"> Fil 21  </div>
             <div class="col items subject"> Kontekstwalisadong Komunikasyon Sa Filipino (Komfil) </div>
             <div class="col items time"> 01:00 PM-04:00 PM</div>
@@ -208,7 +349,7 @@
             <div class="col items faculty"> GAMBOA, M.</div>
             <div class="col items status">--</div>
         </div>
-        <div class="row"> 
+        <div class="row thu"> 
             <div class="col items code"> CS 116  </div>
             <div class="col items subject">  Automata Theory And Formal Languages </div>
             <div class="col items time">05:30 PM-07:00 PM  </div>
@@ -216,7 +357,7 @@
             <div class="col items faculty">MENDONES, R. </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row" style="margin-bottom: 30px;"> 
+        <div class="row thu" style="margin-bottom: 30px;"> 
             <div class="col items code"> GEC 16 </div>
             <div class="col items subject">  Art Appreciation  </div>
             <div class="col items time">07:00 PM-08:30 PM  </div>
@@ -227,7 +368,7 @@
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" > FRIDAY</div>
         </div>
-        <div class="row"> 
+        <div class="row fri"> 
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
             <div class="col items time"> 04:00 PM-06:00 PM </div>
