@@ -15,6 +15,7 @@
 
         class Time{
             constructor(hour, minute,second = 0, day = 0){
+                this.day = day;
                 this.hour = hour;
                 this.minute = minute;
                 this.second = second;
@@ -53,7 +54,7 @@
             var minute  =  (time1.minute + (60 * hour) ) - time2.minute
             var seconds = (time1.second + (60 * minute) ) - time2.second
             
-            return  Math.floor(((seconds/60)/60)/24) + Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor(seconds/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            return  Math.floor(((seconds/60)/60)/24).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':'+ Math.floor(((seconds/60)/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
         }
     
 
@@ -119,17 +120,51 @@
 
             var loop = setInterval( () =>{
                 var currentDate = new Date();
-                var activeClass, currentTime = new Time(currentDate.getHours(), currentDate.getMinutes() , currentDate.getSeconds(), currentDate.getDate());
+                var activeClass, currentTime = new Time(currentDate.getHours(), currentDate.getMinutes() , currentDate.getSeconds(), currentDate.getDay());
                 for(var i = 0 ; i < schedList.length; i++){
                     if(schedList[i].day == currentDate.getDay() ){
                         for(var j = 0; j < schedList[i].subjects.length; j++){
-                            if( solveMinutes(currentTime , schedList[i].subjects[j].start) > 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
+                            if(solveMinutes (schedList[i].subjects[j].end, currentTime) <= 0)  {
+                                schedList[i].subjects[j].status.innerHTML = 'Class Done';
+                            }
+                            else if( solveMinutes(currentTime , schedList[i].subjects[j].start) > 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Ongoing (' + classOngoing (schedList[i].subjects[j].end, currentTime)+')' ;
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
                                     activeClass[k].classList.add('classOngoing');
                                 }
-                                
+                            }else{
+                                activeClass = schedList[i].subjects[j].element.children;
+                                for(var k = 0 ; k < activeClass.length; k++){
+                                    if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
+                                    if(activeClass[k].classList.contains('classDone')) activeClass[k].classList.remove('classDone');
+                                }
+                            }
+                        }
+                    }
+                    else if(schedList[i].day > currentDate.getDay()){
+                        for(var j = 0; j < schedList[i].subjects.length;j++){
+                            schedList[i].subjects[j].start.day = schedList[i].day;
+                            schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
+                        }
+                    }
+                    else if(currentDate.getDay() == 6){
+                        for(var m = 0 ; m  < schedList[i].subjects.length; m++){
+                            schedList[i].subjects[m].status.innerHTML = "Class Done";
+                        }
+                    }
+                    else if(currentDate.getDay() == 0){
+                        for(var j = 0; j < schedList[i].subjects.length;j++){
+                            schedList[i].subjects[j].start.day = schedList[i].day;
+                            schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
+                        }
+                    }
+                    else{
+                        var backwards = i;
+                        while(backwards > 1 && backwards < i){
+                            backwards--;
+                            for(var m = 0 ; m  < schedList[backwards].subjects.length; m++){
+                                schedList[backwards].subjects[m].status.innerHTML = "Class Done";
                             }
                         }
                     }
@@ -209,9 +244,7 @@
             color: white;
         }
 
-        .classDone{
-            background-color: rgb(200, 202, 202);
-        }
+      
         .classOngoing{
             background-color: greenyellow;
         }
