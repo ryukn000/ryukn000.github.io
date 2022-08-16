@@ -45,7 +45,7 @@
             var minute  =  (time1.minute + (60 * hour) ) - time2.minute
             var seconds = (time1.second + (60 * minute) ) - time2.second
             
-            return Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor(seconds/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            return Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
         }
         
         function countdown(time1, time2){
@@ -127,7 +127,7 @@
                             if(solveMinutes (schedList[i].subjects[j].end, currentTime) <= 0)  {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Dismissed';
                             }
-                            else if( solveMinutes(currentTime , schedList[i].subjects[j].start) > 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
+                            else if( solveMinutes(currentTime , schedList[i].subjects[j].start) >= 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) >= 0) {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Ongoing (' + classOngoing (schedList[i].subjects[j].end, currentTime)+')' ;
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
@@ -137,10 +137,8 @@
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
                                     if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
-                                    for(var j = 0; j < schedList[i].subjects.length;j++){
-                                        schedList[i].subjects[j].start.day = schedList[i].day;
-                                        schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
-                                    }
+                                    schedList[i].subjects[j].start.day = schedList[i].day;
+                                    schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                                 }
                             }
                         }
