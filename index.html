@@ -123,7 +123,7 @@
                                 schedList[i].subjects[j].status.innerHTML = 'Class Dismissed';
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
-                                    activeClass[k].classList.add('classDismissed');
+                                    activeClass[k].classList.add('classDismissedToday');
                                     if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                 }
                             }
@@ -138,8 +138,10 @@
                                 for(var k = 0 ; k < activeClass.length; k++){
                                     if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                     if(activeClass[k].classList.contains('classDismissed')) activeClass[k].classList.remove('classDismissed');
-                                    if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
+                                    if(activeClass[k].classList.contains('classDismissedToday'))activeClass[k].classList.add('classDismissedToday');
                                 }
+                                if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
+                                if(schedList[i].title.classList.contains('laterClass')) schedList[i].title.classList.remove('laterClass');
                                 schedList[i].subjects[j].start.day = schedList[i].day;
                                 schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                             }
@@ -149,6 +151,11 @@
                         for(var j = 0; j < schedList[i].subjects.length;j++){
                             schedList[i].subjects[j].start.day = schedList[i].day;
                             schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
+                            activeClass = schedList[i].subjects[j].element.children;
+                            for(var k = 0 ; k < activeClass.length; k++){
+                                activeClass[k].classList.add('laterClass');
+                            }
+                            schedList[i].title.classList.add('laterClass');
                         }
                     }
                     else if(currentDate.getDay() == 0){
@@ -157,16 +164,17 @@
                             for(var k = 0 ; k < activeClass.length; k++){
                                 if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                 if(activeClass[k].classList.contains('classDismissed')) activeClass[k].classList.remove('classDismissed');
-                                if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
+                                if(activeClass[k].classList.contains('classDismissedToday'))activeClass[k].classList.add('classDismissedToday');
                             }
+                            if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
                             schedList[i].subjects[j].start.day = schedList[i].day;
                             schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                         }
                     }else if(schedList[i].day < currentDate.getDay()){
                         schedList[i].title.classList.add('classDismissed');
-                        for(var m = 0 ; m  < schedList[i].subjects.length; m++){
-                            schedList[i].subjects[m].status.innerHTML = "Class Dismissed";
-                            activeClass = schedList[i].subjects[m].element.children;
+                        for(var j = 0 ; j < schedList[i].subjects.length; j++){
+                            schedList[i].subjects[j].status.innerHTML = "Class Dismissed";
+                            activeClass = schedList[i].subjects[j].element.children;
                             for(var k = 0 ; k < activeClass.length; k++){
                                 if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                 activeClass[k].classList.add('classDismissed');
@@ -269,8 +277,16 @@
             background-color: rgb(63, 63, 63);
             color: white;
         }
+        .classDismissedToday{
+            background-color: rgb(63, 63, 63);
+            color: white;
+        }
         .classOngoing{
             background-color: greenyellow;
+        }
+
+        .laterClass{
+            background-color: rgb(200, 224, 231);
         }
 
         @media screen and (max-width: 890px) {
