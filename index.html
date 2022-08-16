@@ -23,14 +23,25 @@
             }
         }
 
+
         class Subject{
             constructor(element){
                 this.element = element;
-                this.start, this.end;
+                this.start = new Time() , this.end = new Time();
                 this.status;
                 for(var i = 0; i < element.children.length; i++){
                     if(element.children[i].classList.contains('status')){
                         this.status = element.children[i];
+                    }
+                    if(element.children[i].classList.contains('time')){
+                        var html = element.children[i].innerHTML;
+                        this.start.hour =  parseInt(html[0] + '' + html[1]);
+                        if(html[6] +'' + html[7] == 'PM' && this.start.hour !=12 ) this.start.hour += 12;
+                        this.start.minute =  parseInt(html[3] + '' + html[4]);
+                        
+                        this.end.hour =  parseInt(html[9] + '' + html[10]);
+                        if(html[15] +'' + html[16] == 'PM' && this.end.hour != 12) this.end.hour += 12;
+                        this.end.minute =  parseInt(html[12] + '' + html[13]);
                     }
                 }
             }
@@ -65,51 +76,28 @@
             var temp = document.getElementsByClassName('mon');
             var monList = new Day(1);
             for (var i = 0; i < temp.length; i++){
-                
                 monList.subjects.push(new Subject(temp[i]));
-            
             }
-            monList.subjects[0].start = new Time(13,0); monList.subjects[0].end = new Time(16, 0);
-            monList.subjects[1].start = new Time(17,30); monList.subjects[1].end = new Time(19, 30);
-
             temp = document.getElementsByClassName('tue');
             var tueList = new Day(2);
             for (var i = 0; i < temp.length; i++){
                 tueList.subjects.push(new Subject(temp[i]));
             }
-
-            tueList.subjects[0].start = new Time(9,0); tueList.subjects[0].end = new Time(12, 0);
-            tueList.subjects[1].start = new Time(13,0); tueList.subjects[1].end = new Time(16, 0);
-            tueList.subjects[2].start = new Time(17,30); tueList.subjects[2].end = new Time(19, 0);
-            tueList.subjects[3].start = new Time(19,0); tueList.subjects[3].end = new Time(20, 30);
-
             temp = document.getElementsByClassName('wed');
             var wedList = new Day(3);
             for (var i = 0; i < temp.length; i++){
                 wedList.subjects.push(new Subject(temp[i]));
             }
-
-            wedList.subjects[0].start = new Time(8,0); wedList.subjects[0].end = new Time(10, 0);
-            wedList.subjects[1].start = new Time(13,0); wedList.subjects[1].end = new Time(16, 0);
-
             temp = document.getElementsByClassName('thu');
             var thuList = new Day(4);
             for (var i = 0; i < temp.length; i++){
                 thuList.subjects.push(new Subject(temp[i]));
             }
-
-            thuList.subjects[0].start = new Time(9,0); thuList.subjects[0].end = new Time(12, 0);
-            thuList.subjects[1].start = new Time(13,0); thuList.subjects[1].end = new Time(16, 0);
-            thuList.subjects[2].start = new Time(17,30); thuList.subjects[2].end = new Time(19, 0);
-            thuList.subjects[3].start = new Time(19,0); thuList.subjects[3].end = new Time(20, 30);
-
             temp = document.getElementsByClassName('fri');
             var friList = new Day(5);
             for (var i = 0; i < temp.length; i++){
                 friList.subjects.push(new Subject(temp[i]));
             }
-
-            friList.subjects[0].start = new Time(16,0); friList.subjects[0].end = new Time(18, 0);
 
             monList.title = document.getElementById('monday');
             tueList.title = document.getElementById('tuesday');
@@ -133,12 +121,13 @@
                         for(var j = 0; j < schedList[i].subjects.length; j++){
                             if(solveMinutes (schedList[i].subjects[j].end, currentTime) <= 0)  {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Dismissed';
-                                activeClass = schedList[i].subjects[m].element.children;
+                                activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
                                     activeClass[k].classList.add('classDismissed');
+                                    if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                 }
                             }
-                            else if( solveMinutes(currentTime , schedList[i].subjects[j].start) >= 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) >= 0) {
+                            else if( solveMinutes(currentTime , schedList[i].subjects[j].start) >= 0 && solveMinutes (schedList[i].subjects[j].end, currentTime) > 0) {
                                 schedList[i].subjects[j].status.innerHTML = 'Class Ongoing (' + classOngoing (schedList[i].subjects[j].end, currentTime)+')' ;
                                 activeClass = schedList[i].subjects[j].element.children;
                                 for(var k = 0 ; k < activeClass.length; k++){
@@ -150,9 +139,9 @@
                                     if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                     if(activeClass[k].classList.contains('classDismissed')) activeClass[k].classList.remove('classDismissed');
                                     if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
-                                    schedList[i].subjects[j].start.day = schedList[i].day;
-                                    schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                                 }
+                                schedList[i].subjects[j].start.day = schedList[i].day;
+                                schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                             }
                         }
                     }
@@ -164,9 +153,12 @@
                     }
                     else if(currentDate.getDay() == 0){
                         for(var j = 0; j < schedList[i].subjects.length;j++){
-                            if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
-                            if(activeClass[k].classList.contains('classDismissed')) activeClass[k].classList.remove('classDismissed');
-                            if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
+                            activeClass = schedList[i].subjects[j].element.children;
+                            for(var k = 0 ; k < activeClass.length; k++){
+                                if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
+                                if(activeClass[k].classList.contains('classDismissed')) activeClass[k].classList.remove('classDismissed');
+                                if(schedList[i].title.classList.contains('classDismissed'))schedList[i].title.classList.remove('classDismissed');
+                            }
                             schedList[i].subjects[j].start.day = schedList[i].day;
                             schedList[i].subjects[j].status.innerHTML = '' + countdown (schedList[i].subjects[j].start, currentTime)+'' ;
                         }
@@ -176,6 +168,7 @@
                             schedList[i].subjects[m].status.innerHTML = "Class Dismissed";
                             activeClass = schedList[i].subjects[m].element.children;
                             for(var k = 0 ; k < activeClass.length; k++){
+                                if(activeClass[k].classList.contains('classOngoing')) activeClass[k].classList.remove('classOngoing');
                                 activeClass[k].classList.add('classDismissed');
                             }
                         }
@@ -307,12 +300,12 @@
             <div class="col title" id="sched" > SCHEDULE </div>
         </div>
         <div class="row" style="margin-bottom: 0px;"> 
-            <div class="col items label code"> CODE </div>
-            <div class="col items label subject"> SUBJECT </div>
-            <div class="col items label time"> TIME</div>
-            <div class="col items label room"> ROOM</div>
-            <div class="col items label faculty">FACULTY</div>
-            <div class="col items label status">STATUS</div>
+            <div class="col items label codeL"> CODE </div>
+            <div class="col items label subjectL"> SUBJECT </div>
+            <div class="col items label timeL"> TIME</div>
+            <div class="col items label roomL"> ROOM</div>
+            <div class="col items label facultyL">FACULTY</div>
+            <div class="col items label statusL">STATUS</div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
             <div class="col dayTitle" id="monday"> MONDAY</div>
@@ -323,7 +316,7 @@
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
 
-            <div class="col items time"> 01:00 PM-04:00 PM</div>
+            <div class="col items time">01:00 PM-04:00 PM</div>
             <div class="col items room"> CS-02-204</div>
             <div class="col items faculty">BURCE, M.</div>
             <div class="col items status">--</div>
@@ -332,7 +325,7 @@
         <div class="row mon"style="margin-bottom: 30px;"> 
             <div class="col items code"> CS 115</div>
             <div class="col items subject"> Computer Architecture And Organization </div>
-            <div class="col items time"> 05:30 PM-07:30 PM</div>
+            <div class="col items time">05:30 PM-07:30 PM</div>
             <div class="col items room"> CS-04-208</div>
             <div class="col items faculty">-----</div>
             <div class="col items status">--</div>
@@ -386,7 +379,7 @@
         <div class="row wed"style="margin-bottom: 30px;"> 
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
-            <div class="col items time"> 01:00 PM-04:00 PM</div>
+            <div class="col items time">01:00 PM-04:00 PM</div>
             <div class="col items room"> CS-02-204</div>
             <div class="col items faculty">BURCE, M.</div>
             <div class="col items status">--</div>
@@ -406,7 +399,7 @@
         <div class="row thu"> 
             <div class="col items code"> Fil 21  </div>
             <div class="col items subject"> Kontekstwalisadong Komunikasyon Sa Filipino (Komfil) </div>
-            <div class="col items time"> 01:00 PM-04:00 PM</div>
+            <div class="col items time">01:00 PM-04:00 PM</div>
             <div class="col items room"> CAL TBA20</div>
             <div class="col items faculty"> GAMBOA, M.</div>
             <div class="col items status">--</div>
@@ -433,7 +426,7 @@
         <div class="row fri" style="margin-bottom: 30px;"> 
             <div class="col items code"> CS 114 </div>
             <div class="col items subject"> Operating Systems </div>
-            <div class="col items time"> 04:00 PM-06:00 PM </div>
+            <div class="col items time">04:00 PM-06:00 PM </div>
             <div class="col items room"> CS-02-204</div>
             <div class="col items faculty">BURCE, M.</div>
             <div class="col items status" >--</div>
