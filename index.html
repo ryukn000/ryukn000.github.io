@@ -36,9 +36,9 @@
                     if(element.children[i].classList.contains('time')){
                         var html = element.children[i].innerHTML;
                         this.start.hour =  parseInt(html[0] + '' + html[1]);
-                        if(html[6] +'' + html[7] == 'PM' && this.start.hour !=12 ) this.start.hour += 12;
+                        if(html[6] +''+ html[7] == 'PM' && this.start.hour !=12 ) this.start.hour += 12;
                         this.start.minute =  parseInt(html[3] + '' + html[4]);
-                        
+
                         this.end.hour =  parseInt(html[9] + '' + html[10]);
                         if(html[15] +'' + html[16] == 'PM' && this.end.hour != 12) this.end.hour += 12;
                         this.end.minute =  parseInt(html[12] + '' + html[13]);
@@ -57,7 +57,9 @@
             var minute  =  (time1.minute + (60 * hour) ) - time2.minute
             var seconds = (time1.second + (60 * minute) ) - time2.second
             
-            return Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            return Math.floor((seconds/60)/60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' 
+                + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" 
+                + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
         }
         
         function countdown(time1, time2){
@@ -66,7 +68,10 @@
             var minute  =  (time1.minute + (60 * hour) ) - time2.minute
             var seconds = (time1.second + (60 * minute) ) - time2.second
             
-            return  Math.floor(((seconds/60)/60)/24).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':'+ Math.floor(((seconds/60)/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+            return  Math.floor(((seconds/60)/60)/24).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':'
+                + Math.floor(((seconds/60)/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ':' 
+                + Math.floor((seconds/60)%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false}) + ":" 
+                + (seconds%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
         }
     
 
@@ -334,7 +339,7 @@
             <div class="col items faculty"> --- </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row mon" style="margin-bottom: 30px;"> 
+        <div class="row mon"> 
             <div class="col items code"> CS Elec 2 </div>
             <div class="col items subject"> Data Mining </div>
             <div class="col items time">01:00 PM-04:00 PM</div>
@@ -343,7 +348,7 @@
             <div class="col items status">--</div>
         </div>
         <!----------------------------------------------------------------------->
-        <div class="row" style="margin-bottom: 10px;">
+        <div class="row" style="margin-bottom: 10px; margin-top: 30px;">
             <div class="col dayTitle" id="tuesday" > TUESDAY</div>
         </div>
         <!----------------------------------------------------------------------->
@@ -363,7 +368,7 @@
             <div class="col items faculty"> ----- </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row tue"style="margin-bottom: 30px;"> 
+        <div class="row tue"> 
             <div class="col items code"> CS 118 </div>
             <div class="col items subject"> Software Engineering 2  </div>
             <div class="col items time">01:00 PM-04:00 PM  </div>
@@ -372,7 +377,7 @@
             <div class="col items status">--</div>
         </div>
         <!----------------------------------------------------------------------->
-        <div class="row" style="margin-bottom: 10px;">
+        <div class="row" style="margin-bottom: 10px; margin-top: 30px;">
             <div class="col dayTitle" id="wednesday" > WEDNESDAY</div>
         </div>
        <!----------------------------------------------------------------------->
@@ -384,7 +389,7 @@
             <div class="col items faculty"> ----- </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row wed" style="margin-bottom: 30px;"> 
+        <div class="row wed"> 
             <div class="col items code"> CS Elec 2 </div>
             <div class="col items subject">  Data Mining </div>
             <div class="col items time">10:00 AM-12:00 PM  </div>
@@ -393,7 +398,7 @@
             <div class="col items status">--</div>
         </div>
         <!----------------------------------------------------------------------->
-        <div class="row" style="margin-bottom: 10px;">
+        <div class="row" style="margin-bottom: 10px;margin-top: 30px;">
             <div class="col dayTitle" id="thursday" > THURSDAY</div>
         </div>
         <!----------------------------------------------------------------------->
@@ -413,16 +418,16 @@
             <div class="col items faculty"> ----- </div>
             <div class="col items status">--</div>
         </div>
-        <div class="row thu" style="margin-bottom: 30px;"> 
+        <div class="row thu"> 
             <div class="col items code"> CS 119 </div>
             <div class="col items subject"> Networks and Communication </div>
-            <div class="col items time">04:00 PM-7:00 PM </div>
+            <div class="col items time">04:00 PM-07:00 PM </div>
             <div class="col items room"> ----- </div>
             <div class="col items faculty"> ----- </div>
             <div class="col items status">--</div>
         </div>
         <!----------------------------------------------------------------------->
-        <div class="row" style="margin-bottom: 10px;">
+        <div class="row" style="margin-bottom: 10px;margin-top: 30px;">
             <div class="col dayTitle" id="friday" > FRIDAY</div>
         </div>
         <!----------------------------------------------------------------------->
